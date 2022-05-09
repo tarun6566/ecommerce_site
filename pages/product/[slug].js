@@ -103,24 +103,22 @@ function ProductDetails({ product, products }) {
   );
 }
 
-export async function getStaticPaths(params) {
+export async function getStaticPaths() {
   let query = `*[_type=='product']{
         slug{
             current
         }
     }`;
   const products = await client.fetch(query);
-  let paths = products?.map((product) => {
-    return {
-      params: {
-        slug: product.slug.current,
-      },
-    };
-  });
+  const paths = products?.map((product) => ({
+    params: {
+      slug: product.slug.current,
+    },
+  }));
 
   return {
     paths,
-    fallback: true,
+    fallback: "blocking",
   };
 }
 
